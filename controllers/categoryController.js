@@ -151,6 +151,28 @@ export const deleteSubCategory = async (req,res) => {
     }
 }
 
+export const getAllSubCategoryById = async (req, res) => {
+    try {
+
+          const {categoryId} = req.params;
+
+        const subcategory =await Subcategory.findById(categoryId) 
+        console.log("subcateg",subcategory)
+        res.status(200).send({
+            success: true,
+            messsage: "SubCategory Deleted Successfully",
+            subcategory,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error,
+            message: "Error while get subcategory by id",
+        });
+    }
+}
+
 
 
 export const getAllCategory = async (req, res) => {

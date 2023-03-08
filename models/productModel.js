@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
         maxLength: [5, "Product price should not be more than 5 digits"]
     },
     sizes: [{
-        type: String,
+        type: Array,
         required: true
     }],
   
@@ -81,6 +81,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    
     // userDetails: {
     //     type: Object,
     //     default: null

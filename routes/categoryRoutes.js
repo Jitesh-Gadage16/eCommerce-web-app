@@ -10,6 +10,7 @@ import {
     deleteSubCategory,
     getAllCategory,
     getAllSubCategory,
+    getAllSubCategoryById
 
     
 
@@ -58,6 +59,14 @@ router.put(
 //getALl category
 router.get("/getAllCategory", getAllCategory);
 router.get("/getAllSubCategory", getAllSubCategory);
+
+
+router.get(
+    "/getSubcategory/:categoryId",
+    requireSignIn,
+    isAdmin,
+    getAllSubCategoryById
+);
 
 
 //delete category
