@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import toast from "react-hot-toast";
+import { FaUserAlt, FaShoppingCart,FaRegHeart } from "react-icons/fa";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
@@ -17,7 +18,7 @@ const Header = () => {
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
+        <div className="container-fluid navbar-container">
           <button
             className="navbar-toggler"
             type="button"
@@ -29,21 +30,44 @@ const Header = () => {
           >
             <span className="navbar-toggler-icon" />
           </button>
+          <div className="mobile">
+            <img src="https://images.bewakoof.com/web/ic-web-head-bwk-primary-logo-eyes.svg"  alt="mob-logo"/>
+          </div>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <Link to="/" className="navbar-brand">
-              🛒 Ecommerce App
-            </Link>
+            <div className="d-flex justify-center align-items-center">
+
+
+              <Link to="/" className="navbar-brand">
+                <img src="https://images.bewakoof.com/web/ic-desktop-bwkf-trademark-logo.svg" alt="logo" />
+              </Link>
+
+              <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <NavLink to="/category" className="nav-link ">
+                    Mens
+                  </NavLink>
+                </li>
+
+                <li className="nav-item">
+                  <NavLink to="/category" className="nav-link ">
+                    Womens
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/category" className="nav-link ">
+                    Kids
+                  </NavLink>
+                </li>
+              </ul>
+
+            </div>
+
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink to="/" className="nav-link ">
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <NavLink to="/category" className="nav-link ">
                   Category
                 </NavLink>
-              </li>
+              </li> */}
               {!auth?.user ? (
                 <>
                   <li className="nav-item">
@@ -61,15 +85,20 @@ const Header = () => {
                 <>
                   <li className="nav-item dropdown">
                     <NavLink
-                      className="nav-link dropdown-toggle"
+                      className="nav-link dropdown-toggle "
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      {auth?.user?.name}
+                      <FaUserAlt />
                     </NavLink>
                     <ul className="dropdown-menu">
+                      <li>
+                        <NavLink className="dropdown-item">
+                          {auth?.user?.name}
+                        </NavLink>
+                      </li>
                       <li>
                         <NavLink to={`/dashboard/${auth?.user?.role === 1 ? "admin" : "user"}`} className="dropdown-item">
                           Dashboard
@@ -88,9 +117,15 @@ const Header = () => {
                   </li>
                 </>
               )}
+
               <li className="nav-item">
                 <NavLink to="/cart" className="nav-link">
-                  Cart (0)
+                  <FaRegHeart />
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/cart" className="nav-link">
+                  <FaShoppingCart />
                 </NavLink>
               </li>
             </ul>

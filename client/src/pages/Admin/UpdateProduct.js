@@ -4,29 +4,59 @@ import AdminMenu from "./../../components/Layout/AdminMenu";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const { Option } = Select;
 
-const CreateProduct = () => {
-  const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [subcategoryId, setSubCategoryId] = useState("");
-  const [sizes,setSizes] = useState("");
-  const [stock, setStock] = useState("");
-  const [brand, setBrand] = useState("");
-  const [shipping, setShipping] = useState("");
-  const [photos, setPhotos] = useState("");
+const UpdateProduct = () => {
+    const navigate = useNavigate();
+    const params = useParams();
+    const [categories, setCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("");
+    const [categoryId, setCategoryId] = useState("");
+    const [subcategoryId, setSubCategoryId] = useState("");
+    const [sizes,setSizes] = useState("");
+    const [stock, setStock] = useState("");
+    const [brand, setBrand] = useState("");
+    const [shipping, setShipping] = useState("");
+    const [photos, setPhotos] = useState("");
+  
+  const [id, setId] = useState("");
 
+  console.log("pp",params)
+
+  //get single product
+  const getSingleProduct = async () => {
+    try {
+      const { data } = await axios.get(
+        `/api/v1/product/get-product/${params.slug}`
+      );
+
+      console.log("dtat", data)
+      setName(data.product.name);
+      setId(data.product._id);
+      setDescription(data.product.description);
+      setPrice(data.product.price);
+      setPhotos(data.product.photos);
+      setStock(data.product.stock);
+      setShipping(data.product.shipping);
+      setCategoryId(data.product.categoryId);
+      setSubCategoryId(data.product.subcategoryId);
+      setId(data.product._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getSingleProduct();
+    //eslint-disable-next-line
+  }, []);
   //get all category
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/getAllCategory");
-      console.log("data", data)
       if (data?.success) {
         setCategories(data?.category);
       }
@@ -36,10 +66,9 @@ const CreateProduct = () => {
     }
   };
 
-  const getAllSubCategory = async () => {
+  const getAllsubCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/getAllsubCategory");
-      console.log("data", data)
       if (data?.success) {
         setSubCategories(data?.category);
       }
@@ -50,25 +79,11 @@ const CreateProduct = () => {
   };
 
   useEffect(() => {
-    getAllSubCategory();getAllCategory()
+    getAllCategory();getAllsubCategory()
   }, []);
 
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      console.log("zasaz",reader.result)
-      setPhotos(reader.result);
-    };
-  };
-
-
   //create product function
-  const handleCreate = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       const productData = new FormData();
@@ -81,15 +96,17 @@ const CreateProduct = () => {
       productData.append("subcategoryId", subcategoryId);
       productData.append("sizes", sizes);
       productData.append("brand", brand);
-      const { data } = axios.post(
-        "/api/v1/product/create-product",
+
+      const editdata = await axios.put(
+        `/api/v1/product/update-product/${id}`,
         productData
       );
-      if (data?.success) {
-        toast.success("Product Created Successfully");
+      console.log("ooooo",editdata.data)
+      if (editdata.data.success) {
+        toast.success("Product updated Successfully");
         navigate("/dashboard/admin/products");
       } else {
-        toast.error(data?.message);
+        toast.error(editdata.data.message);
       
       }
     } catch (error) {
@@ -98,6 +115,34 @@ const CreateProduct = () => {
     }
   };
 
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      console.log("zasaz",reader.result)
+      setPhotos(reader.result);
+    };
+  };
+
+  //delete a product
+  const handleDelete = async () => {
+    try {
+      let answer = window.prompt("Are You Sure want to delete this product ? ");
+      if (!answer) return;   
+      const { data } = await axios.delete(
+        `/api/v1/product/delete-product/${id}`   
+      );
+      toast.success("Product DEleted Succfully");
+      navigate("/dashboard/admin/products");  
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
   return (
     <Layout title={"Dashboard - Create Product"}>
     <div className="container-fluid m-3 p-3">
@@ -142,7 +187,7 @@ const CreateProduct = () => {
             </Select>
             <div className="mb-3">
               <label className="btn btn-outline-secondary col-md-12">
-                {photos ? photos.name : "Upload Photo"}
+                {photos ? "product image" : "Upload Photo"}
                 <input
                   type="file"
                   name="photo"
@@ -237,10 +282,15 @@ const CreateProduct = () => {
               </Select>
             </div>
             <div className="mb-3">
-              <button className="btn btn-primary" onClick={handleCreate}>
-                CREATE PRODUCT
-              </button>
-            </div>
+                <button className="btn btn-primary" onClick={handleUpdate}>
+                  UPDATE PRODUCT
+                </button>
+              </div>
+              <div className="mb-3">
+                <button className="btn btn-danger" onClick={handleDelete}>
+                  DELETE PRODUCT
+                </button>
+              </div>
           </div>
         </div>
       </div>
@@ -249,4 +299,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default UpdateProduct;

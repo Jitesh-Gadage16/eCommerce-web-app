@@ -1,6 +1,7 @@
 
 import Product from "../models/productModel.js";
-
+import Category from "../models/categoryModel.js";
+import Subcategory from "../models/subCategoryModel.js";
 import slugify from "slugify";
 import fs from 'fs'
 
@@ -31,11 +32,31 @@ export const createProduct = async (req, res) => {
             return res.status(500).send({ error: "subcategoryId is required" })
         case !brand:
             return res.status(500).send({ error: "brand is required" })
-        case photos && photos.size > 1000000:
-            return res
+        case !photos:
+            return res   
                 .status(500)
                 .send({ error: "photo is Required and should be less then 1mb" });
     }
+
+    const getcategory = await Category.findById(categoryId)
+    console.log("getcategory",getcategory)
+
+    const productData = {
+        name,
+        description,
+        price,
+        sizes,
+        stock,
+        categoryId,
+        subcategoryId,
+        brand,
+        photos,
+        category:getcategory
+    }
+    
+    console.log("wwww",productData)
+
+
     const products = new Product({ ...req.fields, slug: slugify(name) })
 
     // if(photo){
@@ -67,8 +88,9 @@ export const editProduct = async (req, res) => {
     try {
 
         const { name, description, price, sizes, stock, categoryId, subcategoryId, brand, photos } = req.fields;
-
+        // const blogId = req.query.blogId;
         const { id } = req.params;
+        console.log(id)
 
         const product = await Product.findByIdAndUpdate(
             id,
@@ -85,6 +107,55 @@ export const editProduct = async (req, res) => {
         console.log("error in update product", error)
     }
 }
+
+export const getProduct = async (req, res) => {
+    try {
+        const { slug } = req.params;
+        console.log(slug)
+        const product = await Product
+      .findOne({slug:slug})
+
+        console.log("asa",product)
+        res.status(200).send({
+            success: true,
+            messsage: "product got Successfully",
+            product,
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error,
+            message: "Error while get all product",
+        });
+    }
+}
+
+export const getProductbyCategoryId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(id)
+        const product = await Product
+      .findOne({id})
+
+        console.log("produts by category",product)
+        res.status(200).send({
+            success: true,
+            messsage: "product got Successfully",
+            product,
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error,
+            message: "Error while get all product",
+        });
+    }
+}
+
 
 
 export const getAllProducts = async (req, res) => {
@@ -107,3 +178,22 @@ export const getAllProducts = async (req, res) => {
         });
     }
 }
+
+
+//delete controller
+export const deleteProductController = async (req, res) => {
+    try {
+      await Product.findByIdAndDelete(req.params.pid).select("-photo");
+      res.status(200).send({
+        success: true,
+        message: "Product Deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error while deleting product",
+        error,
+      });
+    }
+  };

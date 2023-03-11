@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
         maxLength: [5, "Product price should not be more than 5 digits"]
     },
     sizes: [{
-        type: Array,
+        type: String,
         required: true
     }],
   
@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema({
     subcategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Subcategory"
+    },
+    category:{
+        type: Object,
+        default: null
     },
     
     brand: {

@@ -15,9 +15,8 @@
   font-size: 17px;
   line-height: 26px;
   text-transform: uppercase;
-  box-shadow: 0 8px 6px -6px gray;
-  --webkit-box-shadow: 0 8px 6px -6px gray;
-  border-bottom: solid gray !important;
+
+  border-bottom: 1px solid rgba(0,0,0,.2);
 }
 
 .nav-link {
@@ -97,4 +96,148 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.product-link {
+  text-decoration: none !important;
+  color: black !important;
+}
+
+
+.navbar-container{
+  max-width: 1200px;
+}
+
+/* ============slider=============================== */
+
+
+
+.slider {
+  position: relative;
+  /* height: 70vh; */
+}
+
+.slides-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 36px;
+  color: white;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+.dots-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: white;
+}
+
+/* ============slider=============================== */
+
+
+.slider-img{
+  width:100%
+}
+
+.slider-div{
+  width: 531px;
+  padding: 0 20px;
+}
+
+.card-div{
+  height: 175px;
+  width: 125px;
+}
+.card-div img{
+  width: 100%;
+}
+
+
+.deals-div{
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.card-name{
+  font-family: montserrat,sans-serif;
+    font-weight: 700;
+    letter-spacing: .05px;
+    margin-top: 19px;
+    text-align: center;
+    font-size: 12px;
+}
+.desktop{
+  display: block;
+}
+
+
+.mobile{
+  display:none;
+}
+
+@media (max-width: 768px) { 
+  .desktop{
+    display: none;
+  }
+
+
+  .mobile{
+    display: block;
+  }
 }
