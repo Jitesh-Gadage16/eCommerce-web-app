@@ -5,16 +5,20 @@ import Subcategory from "../models/subCategoryModel.js";
 import slugify from "slugify";
 import fs from 'fs'
 
+
+
+
 export const createProduct = async (req, res) => {
+    try {
 
-    const { name, description, price, sizes, stock, categoryId, subcategoryId, brand, photos } = req.fields
+    const { name, description, price, sizes, stock, categoryId, subcategoryId, brand,photos} = req.fields
     // console.log("sas",images)
-    // const { photo } = req.files;
+    // const { photos } = req.files;
 
-    //multiple image pending
+    //multiple image pending   
     // console.log("photo", photo)
-
-    //validation
+   
+    //validation  
     switch (true) {
         case !name:
             return res.status(500).send({ error: "Name is required" })
@@ -33,28 +37,27 @@ export const createProduct = async (req, res) => {
         case !brand:
             return res.status(500).send({ error: "brand is required" })
         case !photos:
-            return res   
+            return res
                 .status(500)
                 .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const getcategory = await Category.findById(categoryId)
-    console.log("getcategory",getcategory)
+    // const getcategory = await Category.findById(categoryId)
+    // console.log("getcategory", getcategory)
 
     const productData = {
         name,
         description,
-        price,
+        price,  
         sizes,
         stock,
         categoryId,
         subcategoryId,
         brand,
-        photos,
-        category:getcategory
+        photos
     }
-    
-    console.log("wwww",productData)
+
+    console.log("wwww", productData)
 
 
     const products = new Product({ ...req.fields, slug: slugify(name) })
@@ -71,7 +74,7 @@ export const createProduct = async (req, res) => {
         products
     })
 
-    try {
+   
 
     } catch (error) {
         console.log(error);
@@ -108,17 +111,17 @@ export const editProduct = async (req, res) => {
     }
 }
 
-export const getProduct = async (req, res) => {
+export const getProductbySlug = async (req, res) => {
     try {
         const { slug } = req.params;
         console.log(slug)
         const product = await Product
-      .findOne({slug:slug})
+            .findOne({ slug: slug })
 
-        console.log("asa",product)
+        console.log("asa", product)
         res.status(200).send({
             success: true,
-            messsage: "product got Successfully",
+            messsage: "product got Successfully on slug",
             product,
         })
 
@@ -132,14 +135,14 @@ export const getProduct = async (req, res) => {
     }
 }
 
-export const getProductbyCategoryId = async (req, res) => {
+export const getProductbyId = async (req, res) => {
     try {
         const { id } = req.params;
         console.log(id)
         const product = await Product
-      .findOne({id})
+            .findOne({ id })
 
-        console.log("produts by category",product)
+        console.log("produts by category", product)
         res.status(200).send({
             success: true,
             messsage: "product got Successfully",
@@ -155,6 +158,38 @@ export const getProductbyCategoryId = async (req, res) => {
         });
     }
 }
+
+export const getprodutbycategory = async (req, res) => {
+
+    try {
+        const { categoryId, subcategoryId } = req.params;
+
+        if (!(categoryId && subcategoryId)) {
+            res.send("category id req")
+        }
+
+        const getproduct = await Product.find({
+            $and: [
+                { categoryId: categoryId },
+                { subcategoryId: subcategoryId }
+            ]
+        })
+
+        console.log("xaas", getproduct)
+
+        res.status(200).send({
+            success: true,
+            messsage: "product got Successfully",
+            getproduct
+        })
+
+
+    } catch (error) {
+
+    }
+}
+
+
 
 
 
@@ -162,7 +197,7 @@ export const getAllProducts = async (req, res) => {
     try {
         const getProducts = await Product.find({}).select("-photo")
 
-        console.log("asa",getProducts)
+        console.log("asa", getProducts)
         res.status(200).send({
             success: true,
             messsage: "product Updated Successfully",
@@ -183,17 +218,19 @@ export const getAllProducts = async (req, res) => {
 //delete controller
 export const deleteProductController = async (req, res) => {
     try {
-      await Product.findByIdAndDelete(req.params.pid).select("-photo");
-      res.status(200).send({
-        success: true,
-        message: "Product Deleted successfully",
-      });
+        await Product.findByIdAndDelete(req.params.pid).select("-photo");
+        res.status(200).send({
+            success: true,
+            message: "Product Deleted successfully",
+        });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({
-        success: false,
-        message: "Error while deleting product",
-        error,
-      });
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: "Error while deleting product",
+            error,
+        });
     }
-  };
+};
+
+

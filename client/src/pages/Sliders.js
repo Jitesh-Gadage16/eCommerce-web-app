@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Slider from "react-slick";
+import { NavLink } from "react-router-dom";
+
 // import './Slider.css';
 
 function Sliders({ images }) {
@@ -8,7 +10,7 @@ function Sliders({ images }) {
     dots: false,
     infinite: true,
     speed: 500,
-   
+
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
@@ -40,25 +42,31 @@ function Sliders({ images }) {
       },
     ],
   };
-  
-  
+
+
 
   return (
     <div className="slider">
-      
+
       <Slider {...settings} className="overflow-hidden">
 
-        {images.map((image, index) => (
-          <div
-            className="slider-div"
-            key={index}
-          >
-            <img src={image} alt="" className='slider-img' />
-          </div>
+        {images.map((img, index) => (
+         
+         <NavLink  to={`${img.categoryid}/${img.subcategoryid}`}>
+            
+            {console.log(img)}
+           
+            <div
+              className="slider-div"
+              key={index}
+            >
+              <img src={img.image} alt="" className='slider-img' />
+            </div>
+            </NavLink>
         ))}
-        </Slider>
-      
-     
+      </Slider>
+
+
       {/* <div className="dots-container">
         {images.map((_, index) => (
           <span

@@ -21,7 +21,7 @@ const UpdateProduct = () => {
     const [stock, setStock] = useState("");
     const [brand, setBrand] = useState("");
     const [shipping, setShipping] = useState("");
-    const [photos, setPhotos] = useState("");
+    const [photos, setPhotos] = useState([]);
   
   const [id, setId] = useState("");
 
@@ -144,7 +144,7 @@ const UpdateProduct = () => {
     }
   };
   return (
-    <Layout title={"Dashboard - Create Product"}>
+    <Layout title={"Dashboard - update Product"}>
     <div className="container-fluid m-3 p-3">
       <div className="row">
         <div className="col-md-3">
@@ -194,20 +194,18 @@ const UpdateProduct = () => {
                   accept="image/*"
                   onChange={handleImageChange}
                   hidden
+                  multiple
                 />
               </label>
             </div>
             <div className="mb-3">
-              {photos && (
-                <div className="text-center">
-                  <img
-                    src={photos}
-                    alt="product_photo"
-                    height={"200px"}
-                    className="img img-responsive"
-                  />
-                </div>
-              )}
+            {photos?.map((c,index) => (
+                 
+                 <img key={index} src={c}  alt="product_photo"
+                 height={"200px"}
+                 className="img img-responsive" />
+              
+             ))}
             </div>
             <div className="mb-3">
               <input

@@ -82,7 +82,7 @@ const productSchema = new mongoose.Schema({
         },
     ],
     photos: {
-        type: String,
+        type: Array,
         default: null
     },
     

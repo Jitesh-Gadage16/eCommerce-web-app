@@ -17,6 +17,7 @@ import Orders from "./pages/User/Orders";
 import Profile from "./pages/User/Profile";
 import Products from "./pages/Admin/Product";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
+import ProdutPage from "./pages/ProdutPage";
 function App() {
   return (
     <>
@@ -43,6 +44,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
+        <Route path="/:categoryid/:subcategoryid" element={<ProdutPage />} />
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
     </>
